@@ -54,7 +54,10 @@ exports.downloadSpotify = (req, res) => {
     });
 
     child.on('error', (err) => {
-        res.status(500).json({ error: err.message });
+        console.error("Spawn error:", err);
+        if (!res.headersSent) {
+            res.status(500).json({ error: `Process failed to start: ${err.message}. Is the tool installed?` });
+        }
     });
 };
 
@@ -125,6 +128,9 @@ exports.downloadYoutube = (req, res) => {
     });
 
     child.on('error', (err) => {
-        res.status(500).json({ error: err.message });
+        console.error("Spawn error:", err);
+        if (!res.headersSent) {
+            res.status(500).json({ error: `Process failed to start: ${err.message}. Is the tool installed?` });
+        }
     });
 };
