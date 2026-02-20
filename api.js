@@ -49,6 +49,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
+// Root endpoint
+app.get('/', (req, res) => {
+    res.send('<h1>Spotify & YouTube Downloader API</h1><p>Visit <a href="/api-docs">/api-docs</a> for documentation.</p>');
+});
+
 // Helper function to check if FFmpeg is installed
 function checkFfmpeg() {
     try {
