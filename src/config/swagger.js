@@ -14,8 +14,16 @@ const options = {
         },
         servers: [
             {
-                url: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:5000',
-                description: 'Server'
+                url: 'https://download.jeysson.cloud',
+                description: 'Production Server (Custom Domain)'
+            },
+            {
+                url: '/',
+                description: 'Current Server (Relative)'
+            },
+            {
+                url: 'http://localhost:5000',
+                description: 'Local Server'
             }
         ]
     },
