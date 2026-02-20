@@ -9,7 +9,8 @@ exports.downloadSpotify = (req, res) => {
         return res.status(400).json({ error: "URL is required" });
     }
 
-    if (!checkFfmpeg()) {
+    const ffmpegPath = checkFfmpeg();
+    if (!ffmpegPath) {
         return res.status(500).json({ error: "FFmpeg not found. Please install it." });
     }
 
@@ -17,7 +18,7 @@ exports.downloadSpotify = (req, res) => {
 
     // Run spotdl
     // Using shell: true to ensure it finds the command on Windows
-    const child = spawn('spotdl', [url], { 
+    const child = spawn('spotdl', [url, '--ffmpeg', ffmpegPath], { 
         cwd: DOWNLOADS_DIR,
         shell: true 
     });
@@ -65,11 +66,15 @@ exports.downloadYoutube = (req, res) => {
         return res.status(400).json({ error: "URL is required" });
     }
 
-    if (!checkFfmpeg()) {
+    const ffmpegPath = checkFfmpeg();
+    if (!ffmpegPath) {
         return res.status(500).json({ error: "FFmpeg not found. Please install it." });
     }
 
     const commandArgs = [];
+    // Add ffmpeg location
+    commandArgs.push('--ffmpeg-location', ffmpegPath);
+
     if (formatType === 'audio') {
         // Download audio only and convert to mp3
         commandArgs.push('-x', '--audio-format', 'mp3');
