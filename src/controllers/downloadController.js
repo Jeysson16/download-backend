@@ -40,7 +40,7 @@ exports.downloadSpotify = (req, res) => {
     // Run spotdl
     const child = spawn('spotdl', [url, '--ffmpeg', ffmpegPath, '--output', '{artist} - {title}.{ext}'], { 
         cwd: sessionDir,
-        shell: true 
+        shell: false 
     });
 
     let stdout = '';
@@ -144,7 +144,7 @@ exports.downloadYoutube = (req, res) => {
 
     const child = spawn('yt-dlp', commandArgs, { 
         cwd: sessionDir,
-        shell: true 
+        shell: false 
     });
 
     let stdout = '';
