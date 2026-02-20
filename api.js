@@ -4,6 +4,8 @@ const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +15,36 @@ const DOWNLOADS_DIR = path.join(process.cwd(), 'downloads');
 if (!fs.existsSync(DOWNLOADS_DIR)) {
     fs.mkdirSync(DOWNLOADS_DIR, { recursive: true });
 }
+
+// Swagger Definition
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Spotify & YouTube Downloader API',
+            version: '1.0.0',
+            description: 'API for downloading music and videos from Spotify and YouTube using spotdl and yt-dlp.',
+            contact: {
+                name: 'API Support',
+                url: 'https://github.com/Jeysson16/download-backend'
+            }
+        },
+        servers: [
+            {
+                url: `http://localhost:${PORT}`,
+                description: 'Local server'
+            },
+            {
+                url: 'https://your-vercel-app.vercel.app',
+                description: 'Production server'
+            }
+        ]
+    },
+    apis: ['./api.js'], // Files containing annotations
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
@@ -35,7 +67,76 @@ function checkFfmpeg() {
 }
 
 
+// Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Check API health and FFmpeg status
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: API is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ *                 ffmpeg:
+ *                   type: boolean
+ *                   description: True if FFmpeg is installed/detected
+ */
+app.get('/health', (req, res) => {
+    res.json({ status: "ok", ffmpeg: checkFfmpeg() });
+});
+
 // Download from Spotify
+/**
+ * @swagger
+ * /download:
+ *   post:
+ *     summary: Download a track from Spotify
+ *     tags: [Downloads]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - url
+ *             properties:
+ *               url:
+ *                 type: string
+ *                 description: Spotify Track URL
+ *                 example: https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT
+ *     responses:
+ *       200:
+ *         description: Download successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     url:
+ *                       type: string
+ *                     output:
+ *                       type: string
+ *       400:
+ *         description: Missing URL
+ *       500:
+ *         description: Server error or FFmpeg missing
+ */
 app.post('/download', (req, res) => {
     const { url } = req.body;
 

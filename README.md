@@ -1,99 +1,102 @@
-# Spotify & YouTube Downloader Backend
+# 🎵 Spotify & YouTube Downloader Backend
 
-Backend en Node.js para descargar música y vídeos de Spotify y YouTube.
+![Node.js](https://img.shields.io/badge/Node.js-v14+-green?style=for-the-badge&logo=node.js)
+![Express](https://img.shields.io/badge/Express-v4-blue?style=for-the-badge&logo=express)
+![Swagger](https://img.shields.io/badge/Swagger-UI-85EA2D?style=for-the-badge&logo=swagger)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-## Requisitos
+A powerful Node.js backend API designed to handle media downloads from Spotify and YouTube effortlessly. Built with `spotdl` and `yt-dlp` for maximum reliability.
 
-*   Node.js (v14 o superior)
-*   Python (3.8 o superior)
-*   `ffmpeg` instalado y en el PATH del sistema.
-*   Herramientas de Python: `spotdl` y `yt-dlp`.
+---
 
-## Instalación
+## 🚀 Features
 
-1.  Clona el repositorio:
-    ```bash
-    git clone https://github.com/TU_USUARIO/spotify-downloader-backend.git
-    cd spotify-downloader-backend
-    ```
+*   **Spotify Downloads**: Convert Spotify tracks to high-quality MP3s with metadata.
+*   **YouTube Downloads**: Fetch videos (MP4) or extract audio (MP3) from YouTube.
+*   **File Management**: List and serve downloaded files directly via API.
+*   **Swagger Documentation**: Interactive API documentation available at `/api-docs`.
+*   **CORS Enabled**: Ready for frontend integration (React, Flutter, Vue, etc.).
 
-2.  Instala las dependencias de Node.js:
-    ```bash
-    npm install
-    ```
+---
 
-3.  Instala las herramientas de Python necesarias:
-    ```bash
-    pip install spotdl yt-dlp
-    ```
+## 🛠️ Tech Stack
 
-## Uso
+*   **Runtime**: Node.js
+*   **Framework**: Express.js
+*   **Core Tools**:
+    *   `spotdl` (Spotify Downloader)
+    *   `yt-dlp` (YouTube Downloader)
+    *   `ffmpeg` (Media Processing)
+*   **Documentation**: Swagger UI Express
 
-Inicia el servidor:
+---
 
+## 📚 API Documentation
+
+Once the server is running, visit:
+**`http://localhost:5000/api-docs`**
+
+You can test all endpoints directly from the browser!
+
+---
+
+## 🔧 Installation & Setup
+
+### Prerequisites
+
+Ensure you have the following installed:
+*   [Node.js](https://nodejs.org/) (v14+)
+*   [Python](https://www.python.org/) (v3.8+)
+*   [FFmpeg](https://ffmpeg.org/) (Added to System PATH)
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Jeysson16/download-backend.git
+cd download-backend
+```
+
+### 2. Install Dependencies
+```bash
+# Node.js dependencies
+npm install
+
+# Python tools (Required for downloads)
+pip install spotdl yt-dlp
+```
+
+### 3. Run the Server
 ```bash
 npm start
 ```
+The server will start on port `5000`.
 
-El servidor correrá en `http://localhost:5000`.
+---
 
-## API Endpoints
+## 📡 API Endpoints Overview
 
-### 1. Descargar de Spotify
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Check API status and FFmpeg availability |
+| `POST` | `/download` | Download a track from Spotify |
+| `POST` | `/download/youtube` | Download video/audio from YouTube |
+| `GET` | `/songs` | List all downloaded files |
+| `GET` | `/files/*` | Serve/Stream a specific file |
 
-*   **Endpoint:** `POST /download`
-*   **Body:**
-    ```json
-    {
-      "url": "https://open.spotify.com/track/..."
-    }
-    ```
-*   **Respuesta Exitosa:**
-    ```json
-    {
-      "success": true,
-      "message": "Download completed successfully",
-      "data": {
-        "url": "https://open.spotify.com/track/...",
-        "output": "..."
-      }
-    }
-    ```
+---
 
-### 2. Descargar de YouTube
+## ☁️ Deployment
 
-*   **Endpoint:** `POST /download/youtube`
-*   **Body:**
-    ```json
-    {
-      "url": "https://www.youtube.com/watch?v=...",
-      "format": "audio" // o "video"
-    }
-    ```
-*   **Respuesta Exitosa:**
-    ```json
-    {
-      "success": true,
-      "message": "Download completed successfully",
-      "data": {
-        "url": "https://www.youtube.com/watch?v=...",
-        "format": "audio",
-        "output": "..."
-      }
-    }
-    ```
+### Deploy on Vercel
+> **Note:** Vercel is great for the API logic, but since `spotdl` and `yt-dlp` require Python and FFmpeg binaries, standard Vercel functions might fail during actual downloads. For full functionality, consider deploying to a container-based service like **Railway**, **Render**, or **Fly.io** using a Dockerfile.
 
-### 3. Listar Canciones Descargadas
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJeysson16%2Fdownload-backend)
 
-*   **Endpoint:** `GET /songs`
-*   **Respuesta:** Lista de objetos con `name`, `path` y `folder`.
+---
 
-### 4. Servir Archivos
+## 🤝 Contributing
 
-*   **Endpoint:** `GET /files/<path_del_archivo>`
-*   Permite descargar o reproducir el archivo.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Estructura de Carpetas
+## 📄 License
 
-*   `api.js`: Lógica principal del servidor.
-*   `downloads/`: Carpeta donde se guardan los archivos descargados (ignorada por Git).
+This project is licensed under the MIT License.
