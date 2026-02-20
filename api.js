@@ -34,10 +34,6 @@ function checkFfmpeg() {
     }
 }
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: "ok", ffmpeg: checkFfmpeg() });
-});
 
 // Download from Spotify
 app.post('/download', (req, res) => {
@@ -74,11 +70,16 @@ app.post('/download', (req, res) => {
     child.on('close', (code) => {
         if (code === 0) {
             res.json({
+                success: true,
                 message: "Download completed successfully",
-                output: stdout
+                data: {
+                    url: url,
+                    output: stdout
+                }
             });
         } else {
             res.status(500).json({
+                success: false,
                 error: "Download failed",
                 details: stderr || stdout
             });
@@ -136,11 +137,17 @@ app.post('/download/youtube', (req, res) => {
     child.on('close', (code) => {
         if (code === 0) {
             res.json({
+                success: true,
                 message: "Download completed successfully",
-                output: stdout
+                data: {
+                    url: url,
+                    format: formatType,
+                    output: stdout
+                }
             });
         } else {
             res.status(500).json({
+                success: false,
                 error: "Download failed",
                 details: stderr || stdout
             });
