@@ -234,6 +234,10 @@ app.get('/files/*', (req, res) => {
     }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Starting Node.js server on port ${PORT}...`);
-});
+if (require.main === module) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Starting Node.js server on port ${PORT}...`);
+    });
+}
+
+module.exports = app;
